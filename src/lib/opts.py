@@ -13,7 +13,7 @@ class opts(object):
     self.parser.add_argument('task', default='',
                              help='ctdet | ddd | multi_pose '
                              '| tracking or combined with ,')
-    self.parser.add_argument('--dataset', default='coco',
+    self.parser.add_argument('--dataset', default='crowdhuman',
                              help='see lib/dataset/dataset_facotry for ' + 
                             'available datasets')
     self.parser.add_argument('--test_dataset', default='',
@@ -336,7 +336,7 @@ class opts(object):
     opt.input_res = max(opt.input_h, opt.input_w)
     opt.output_res = max(opt.output_h, opt.output_w)
   
-    opt.heads = {'hm': opt.num_classes, 'reg': 2, 'wh': 2}
+    opt.heads = {'hm': 1, 'reg': 2, 'wh': 2}
 
     if 'tracking' in opt.task:
       opt.heads.update({'tracking': 2})
@@ -386,14 +386,14 @@ class opts(object):
   def init(self, args=''):
     # only used in demo
     default_dataset_info = {
-      'ctdet': 'coco', 'multi_pose': 'coco_hp', 'ddd': 'nuscenes',
-      'tracking,ctdet': 'coco', 'tracking,multi_pose': 'coco_hp', 
+      'ctdet': 'crowdhuman', 'multi_pose': 'coco_hp', 'ddd': 'nuscenes',
+      'tracking,ctdet': 'crowdhuman', 'tracking,multi_pose': 'coco_hp', 
       'tracking,ddd': 'nuscenes'
     }
     opt = self.parse()
     from dataset.dataset_factory import dataset_factory
     train_dataset = default_dataset_info[opt.task] \
-      if opt.task in default_dataset_info else 'coco'
+      if opt.task in default_dataset_info else 'crowdhuman'
     dataset = dataset_factory[train_dataset]
     opt = self.update_dataset_info_and_set_heads(opt, dataset)
     return opt
