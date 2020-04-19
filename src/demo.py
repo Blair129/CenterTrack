@@ -27,8 +27,12 @@ def demo(opt):
     cam = cv2.VideoCapture(0 if opt.demo == 'webcam' else opt.demo)
     out = None
     out_name = opt.demo[opt.demo.rfind('/') + 1:]
+    
+    opt.video_w = int(cam.get(cv2.CAP_PROP_FRAME_WIDTH))
+    opt.video_h = int(cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
     if opt.save_video:
-      fourcc = cv2.VideoWriter_fourcc(*'XVID')
+      fourcc = cv2.VideoWriter_fourcc(*'mp4v')
       out = cv2.VideoWriter('../results/{}.mp4'.format(
         opt.exp_id + '_' + out_name),fourcc, opt.save_framerate, (
           opt.video_w, opt.video_h))
@@ -48,9 +52,10 @@ def demo(opt):
             save_and_exit(opt, out, results, out_name)
         if cnt < opt.skip_first:
           continue
-        try:
-          cv2.imshow('input', img)
-        except:
+        #try:
+          #cv2.imshow('input', img)
+        #except:
+        if img is None:
           print('FINISH!')
           save_and_exit(opt, out, results, out_name)
         input_meta = {'pre_dets': []}
